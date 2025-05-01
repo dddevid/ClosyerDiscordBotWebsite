@@ -1,4 +1,4 @@
-// Rilevamento del paese tramite ipify.org e ipwhois.io (senza token API)
+// Sistema di gestione della lingua per il sito Closyer
 document.addEventListener('DOMContentLoaded', function() {
     // Debug flag - impostalo su true per forzare la visualizzazione dei log anche in produzione
     const DEBUG = true;
@@ -9,28 +9,96 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Controlliamo prima se l'utente ha già impostato una preferenza linguistica
-    const langPreference = localStorage.getItem('language_preference');
-    debugLog("Preferenza lingua salvata:", langPreference);
-    
-    // Se l'utente ha già scelto una lingua, rispettiamo quella scelta
-    if (langPreference === 'en' && !window.location.href.includes('indexen.html')) {
-        debugLog("Reindirizzamento a versione inglese per preferenza utente");
-        window.location.href = 'indexen.html';
-        return;
-    } else if (langPreference === 'it' && window.location.href.includes('indexen.html')) {
-        debugLog("Reindirizzamento a versione italiana per preferenza utente");
-        window.location.href = 'index.html';
-        return;
+    // Funzione per ottenere la lingua predefinita del browser
+    function getBrowserLanguage() {
+        const language = navigator.language || navigator.userLanguage;
+        debugLog("Lingua del browser:", language);
+        // Prendiamo solo i primi due caratteri (codice lingua)
+        const browserLang = language.substring(0, 2).toLowerCase();
+        
+        // Verifichiamo se la lingua del browser è supportata
+        if (translations[browserLang]) {
+            return browserLang;
+        }
+        
+        // Se la lingua non è supportata, restituiamo la lingua predefinita
+        return 'it'; // Italiano come fallback
     }
     
-    // Se non abbiamo una preferenza di lingua salvata, controlliamo la posizione dell'utente
-    if (!langPreference) {
-        debugLog("Nessuna preferenza di lingua trovata, controllo posizione");
+    // Funzione per applicare le traduzioni in base alla lingua selezionata
+    function applyTranslations(lang) {
+        debugLog("Applicazione traduzioni per lingua:", lang);
         
-        // Controlliamo prima se siamo sulla versione corretta della pagina in base all'URL attuale
-        const currentUrl = window.location.href;
-        const isEnglishPage = currentUrl.includes('indexen.html');
+        // Verifichiamo se la lingua richiesta esiste
+        if (!translations[lang]) {
+            debugLog("Lingua non supportata, uso 'it' come fallback");
+            lang = 'it'; // Fallback alla lingua italiana
+        }
+        
+        // Aggiorna l'attributo lang dell'HTML
+        document.documentElement.lang = lang;
+        
+        // Seleziona tutti gli elementi con attributo data-i18n
+        const elements = document.querySelectorAll('[data-i18n]');
+        
+        // Per ogni elemento, applica la traduzione corrispondente
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            
+            if (translations[lang][key]) {
+                // Se l'elemento è un input, aggiorna il placeholder
+                if (element.tagName === 'INPUT') {
+                    element.placeholder = translations[lang][key];
+                } 
+                // Se è un elemento con HTML interno (come per il copyright che ha entity HTML)
+                else if (key === 'copyright') {
+                    element.innerHTML = translations[lang][key];
+                }
+                // Per gli altri casi, aggiorna il testo
+                else {
+                    element.textContent = translations[lang][key];
+                }
+            } else {
+                debugLog(`Chiave di traduzione non trovata: ${key}`);
+            }
+        });
+        
+        // Salva la preferenza di lingua
+        localStorage.setItem('language_preference', lang);
+        
+        // Aggiorna la classe attiva sui pulsanti della lingua
+        document.querySelectorAll('.language-switch, .lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    
+    // Gestione della lingua per determinare la lingua iniziale
+    function detectUserLanguage() {
+        // Controlliamo prima la preferenza salvata
+        const savedLanguage = localStorage.getItem('language_preference');
+        
+        if (savedLanguage) {
+            debugLog("Usando la lingua salvata:", savedLanguage);
+            applyTranslations(savedLanguage);
+            return;
+        }
+        
+        // Poi controlliamo la lingua del browser
+        const browserLang = getBrowserLanguage();
+        debugLog("Lingua del browser rilevata:", browserLang);
+        
+        if (translations[browserLang]) {
+            debugLog("Lingua del browser supportata, la utilizzo");
+            applyTranslations(browserLang);
+            return;
+        }
+        
+        // Solo se la lingua del browser non è supportata, proviamo a rilevare il paese tramite API
+        debugLog("Lingua del browser non supportata o ambigua, controllo posizione");
         
         // Prima otteniamo l'indirizzo IP dell'utente usando ipify.org
         fetch('https://api.ipify.org?format=json')
@@ -57,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Verifichiamo che la richiesta sia andata a buon fine
                 if (!geoData.success) {
                     debugLog('Query fallita:', geoData.message);
-                    return;
+                    throw new Error('Geo-localizzazione fallita');
                 }
                 
                 // Log del paese rilevato per debug
@@ -65,46 +133,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 debugLog("Paese rilevato:", geoData.country_code);
                 
                 // Elenco dei paesi in cui mostrare la versione italiana
-                const italianCountries = ['IT', 'MT', 'CH'];
-                const shouldShowItalian = italianCountries.includes(geoData.country_code);
+                const italianCountries = ['IT', 'MT', 'CH', 'SM', 'VA'];
+                const userLang = italianCountries.includes(geoData.country_code) ? 'it' : 'en';
                 
-                debugLog("Dovrebbe mostrare italiano?", shouldShowItalian);
+                debugLog("Lingua selezionata in base alla posizione:", userLang);
                 
-                // Memorizziamo la preferenza dell'utente
-                localStorage.setItem('language_preference', shouldShowItalian ? 'it' : 'en');
-                
-                // Gestisce il reindirizzamento
-                if (shouldShowItalian) {
-                    // Utente dovrebbe vedere la versione italiana
-                    if (isEnglishPage) {
-                        debugLog("Reindirizzamento a versione italiana");
-                        window.location.href = 'index.html';
-                    }
-                } else {
-                    // Utente dovrebbe vedere la versione inglese
-                    if (!isEnglishPage) {
-                        debugLog("Reindirizzamento a versione inglese");
-                        window.location.href = 'indexen.html';
-                    }
-                }
+                // Applica le traduzioni
+                applyTranslations(userLang);
             })
             .catch(error => {
-                // In caso di errore, non facciamo nessun reindirizzamento
-                console.error('Errore durante il controllo dell\'IP:', error);
-                // Come fallback, lasciamo la pagina corrente
+                // In caso di errore, usiamo la lingua predefinita come fallback
+                console.error('Errore durante la geo-localizzazione:', error);
+                
+                debugLog("Uso italiano come lingua di fallback");
+                applyTranslations('it');
             });
     }
+    
+    // Evento per gestire il cambio lingua tramite i pulsanti nel footer
+    document.querySelectorAll('.language-switch, .lang-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.getAttribute('data-lang');
+            debugLog("Cambio lingua richiesto:", lang);
+            applyTranslations(lang);
+        });
+    });
+    
+    // Rileva e imposta la lingua iniziale
+    detectUserLanguage();
 });
-
-// Funzione per cambiare manualmente la lingua
-function changeLanguage(lang) {
-    localStorage.setItem('language_preference', lang);
-    if (lang === 'en' && !window.location.href.includes('indexen.html')) {
-        window.location.href = 'indexen.html';
-    } else if (lang === 'it' && window.location.href.includes('indexen.html')) {
-        window.location.href = 'index.html';
-    }
-}
 
 // Smooth scrolling per i link di ancoraggio
 document.addEventListener('DOMContentLoaded', function() {
@@ -297,35 +355,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Animazione typing effect per la hero section
+// Animazione typing effect per la hero section - modificata per supportare i18n
 document.addEventListener('DOMContentLoaded', function() {
     const heroTitle = document.querySelector('.hero h1');
+    
     if (heroTitle) {
-        // Salva il testo originale
-        const originalText = heroTitle.textContent;
-        // Svuota il titolo
-        heroTitle.textContent = '';
-        
-        let charIndex = 0;
-        
-        // Funzione per animare il testo lettera per lettera
-        function typeText() {
-            if (charIndex < originalText.length) {
-                heroTitle.textContent += originalText.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeText, 50); // velocità del typing
-            } else {
-                // Aggiungi la classe di animazione shimmer quando il typing è completato
-                heroTitle.classList.add('title-shimmer');
+        // Aspettiamo che le traduzioni siano applicate prima di attivare l'effetto typing
+        setTimeout(() => {
+            // Salva il testo attuale (già tradotto)
+            const originalText = heroTitle.textContent;
+            // Svuota il titolo
+            heroTitle.textContent = '';
+            
+            let charIndex = 0;
+            
+            // Funzione per animare il testo lettera per lettera
+            function typeText() {
+                if (charIndex < originalText.length) {
+                    heroTitle.textContent += originalText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeText, 50); // velocità del typing
+                } else {
+                    // Aggiungi la classe di animazione shimmer quando il typing è completato
+                    heroTitle.classList.add('title-shimmer');
+                }
             }
-        }
-        
-        // Inizia l'animazione con un leggero ritardo
-        setTimeout(typeText, 500);
+            
+            // Inizia l'animazione
+            typeText();
+        }, 800); // Attendi che le traduzioni siano applicate
     }
 });
 
-// Effetto di contagio per le card (quando ne passi sopra una influenza anche quelle adiacenti)
+// Effetto di contagio per le card
 document.addEventListener('DOMContentLoaded', function() {
     const cards = document.querySelectorAll('.feature-card');
     
