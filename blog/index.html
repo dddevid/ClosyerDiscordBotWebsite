@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closyer Blog - Notizie e Aggiornamenti</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../translations.js"></script>
+    <script src="../main.js"></script>
+    <style>
+        .blog-container {
+            max-width: 900px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+        
+        .blog-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 3rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .blog-post-card {
+            background: rgba(42, 42, 42, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeIn 1s ease;
+        }
+        
+        .blog-post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(140, 82, 255, 0.3);
+        }
+        
+        .blog-post-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .blog-post-meta {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .blog-post-author {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .blog-post-author::before {
+            content: "👤";
+            margin-right: 5px;
+        }
+        
+        .blog-post-date::before {
+            content: "📅";
+            margin-right: 5px;
+        }
+        
+        .blog-post-excerpt {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .read-more {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(140, 82, 255, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .read-more:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(140, 82, 255, 0.5);
+        }
+        
+        .back-to-site {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 30px;
+        }
+        
+        .language-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .language-btn {
+            display: inline-block;
+            padding: 5px 15px;
+            margin: 0 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Fix per i pulsanti di navigazione */
+        .back-to-site .secondary-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-to-site .secondary-button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: all 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .back-to-site .secondary-button:hover::after {
+            left: 120%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">Clos<span>yer</span></a>
+            <div class="nav-links">
+                <a href="../index.html#features" class="nav-link" data-i18n="nav_features">Funzionalità</a>
+                <a href="../index.html#server" class="nav-link" data-i18n="nav_server">Server Discord</a>
+                <a href="../index.html#add" class="nav-link" data-i18n="nav_add">Aggiungi Bot</a>
+                <a href="index.html" class="nav-link" style="color: var(--primary);">Blog</a>
+            </div>
+            <a href="https://discord.com/oauth2/authorize?client_id=1366105187214823424&permissions=1759218604441591&integration_type=0&scope=bot" class="add-button" data-i18n="nav_add_button">Aggiungi al Server</a>
+        </div>
+    </nav>
+
+    <!-- Blog Content -->
+    <div class="blog-container">
+        <h1 class="blog-title">Closyer Blog</h1>
+        
+        <div class="language-selector">
+            <a href="#" class="language-btn active" data-lang="it">Italiano</a>
+            <a href="#" class="language-btn" data-lang="en">English</a>
+        </div>
+        
+        <!-- Post in Italian -->
+        <div class="blog-post-card" id="it-content">
+            <h2 class="blog-post-title">Reset Database durante la fase Beta: Cosa aspettarsi</h2>
+            <div class="blog-post-meta">
+                <div class="blog-post-author">Devid</div>
+                <div class="blog-post-date">03/05/2025</div>
+            </div>
+            <div class="blog-post-excerpt">
+                Durante la fase beta di Closyer, potranno verificarsi reset periodici del database che comporteranno il ripristino dei dati degli utenti. In questa comunicazione importante spieghiamo come gestiremo questi reset, perché sono necessari, e cosa stiamo facendo per minimizzarne l'impatto...
+            </div>
+            <a href="reset-database-beta.html" class="read-more">Continua a leggere</a>
+        </div>
+        
+        <!-- Post in English -->
+        <div class="blog-post-card" id="en-content" style="display: none;">
+            <h2 class="blog-post-title">Database Reset during Beta Phase: What to Expect</h2>
+            <div class="blog-post-meta">
+                <div class="blog-post-author">Devid</div>
+                <div class="blog-post-date">05/03/2025</div>
+            </div>
+            <div class="blog-post-excerpt">
+                During Closyer's beta phase, periodic database resets may occur, resulting in user data restoration. In this important announcement, we explain how these resets will be managed, why they're necessary, and what we're doing to minimize their impact...
+            </div>
+            <a href="reset-database-beta-en.html" class="read-more">Continue reading</a>
+        </div>
+        
+        <div class="back-to-site">
+            <a href="../index.html" class="secondary-button">Torna al sito principale</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h3 class="footer-title">Closyer</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="../index.html" data-i18n="footer_home">Home</a></li>
+                    <li class="footer-link"><a href="../index.html#features" data-i18n="footer_features">Funzionalità</a></li>
+                    <li class="footer-link"><a href="../index.html#add" data-i18n="footer_add">Aggiungi Bot</a></li>
+                    <li class="footer-link"><a href="../index.html#server" data-i18n="footer_server">Server Discord</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title" data-i18n="footer_resources">Risorse</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_support">Supporto</a></li>
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_docs">Documentazione</a></li>
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_bugs">Segnala Bug</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title" data-i18n="footer_languages">Lingue</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#" class="lang-btn" data-lang="it">Italiano</a></li>
+                    <li class="footer-link"><a href="#" class="lang-btn" data-lang="en">English</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p data-i18n="copyright">&copy; 2025 Closyer Bot. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestione selettore linguaggio per il blog
+            const langBtns = document.querySelectorAll('.language-selector .language-btn');
+            const itContent = document.getElementById('it-content');
+            const enContent = document.getElementById('en-content');
+            
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // Aggiorna i bottoni
+                    langBtns.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostra il contenuto nella lingua selezionata
+                    if (lang === 'it') {
+                        itContent.style.display = 'block';
+                        enContent.style.display = 'none';
+                    } else {
+                        itContent.style.display = 'none';
+                        enContent.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
