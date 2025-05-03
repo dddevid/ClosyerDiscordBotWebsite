@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Reset during Beta Phase - Closyer Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../translations.js"></script>
+    <script src="../main.js"></script>
+    <style>
+        .blog-container {
+            max-width: 800px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+        
+        .blog-post {
+            background: rgba(42, 42, 42, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease;
+        }
+        
+        .blog-post-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--light);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .blog-post-meta {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .blog-post-author {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .blog-post-author::before {
+            content: "👤";
+            margin-right: 5px;
+        }
+        
+        .blog-post-date::before {
+            content: "📅";
+            margin-right: 5px;
+        }
+        
+        .blog-post-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .blog-post-content h2 {
+            margin: 30px 0 15px;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .blog-post-content h3 {
+            margin: 25px 0 15px;
+            color: var(--secondary);
+            font-size: 1.4rem;
+        }
+        
+        .blog-post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .blog-post-content ul, .blog-post-content ol {
+            margin-bottom: 20px;
+            margin-left: 25px;
+        }
+        
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+        
+        .blog-post-content blockquote {
+            margin: 20px 0;
+            padding: 15px 30px;
+            border-left: 4px solid var(--primary);
+            background: rgba(140, 82, 255, 0.1);
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .blog-post-content a {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .blog-post-content a:hover {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+        }
+        
+        .notice-box {
+            background: rgba(140, 82, 255, 0.1);
+            border: 1px solid rgba(140, 82, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .warning-box {
+            background: rgba(255, 94, 188, 0.1);
+            border: 1px solid rgba(255, 94, 188, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .back-to-blog {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 30px;
+        }
+        
+        /* Fix per il pulsante Back to Blog */
+        .back-to-blog .secondary-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-to-blog .secondary-button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: all 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .back-to-blog .secondary-button:hover::after {
+            left: 120%;
+        }
+        
+        .language-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .language-btn {
+            display: inline-block;
+            padding: 5px 15px;
+            margin: 0 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">Clos<span>yer</span></a>
+            <div class="nav-links">
+                <a href="../index.html#features" class="nav-link" data-i18n="nav_features">Features</a>
+                <a href="../index.html#server" class="nav-link" data-i18n="nav_server">Discord Server</a>
+                <a href="../index.html#add" class="nav-link" data-i18n="nav_add">Add Bot</a>
+                <a href="index.html" class="nav-link" style="color: var(--primary);">Blog</a>
+            </div>
+            <a href="https://discord.com/oauth2/authorize?client_id=1366105187214823424&permissions=1759218604441591&integration_type=0&scope=bot" class="add-button" data-i18n="nav_add_button">Add to Server</a>
+        </div>
+    </nav>
+
+    <!-- Blog Content -->
+    <div class="blog-container">
+        <div class="language-selector">
+            <a href="reset-database-beta.html" class="language-btn" data-lang="it">Italiano</a>
+            <a href="#" class="language-btn active" data-lang="en">English</a>
+        </div>
+        
+        <article class="blog-post">
+            <h1 class="blog-post-title">Database Reset during Beta Phase: What to Expect</h1>
+            <div class="blog-post-meta">
+                <div class="blog-post-author">Devid</div>
+                <div class="blog-post-date">05/03/2025</div>
+            </div>
+            
+            <div class="blog-post-content">
+                <p>Dear Closyer community members,</p>
+                
+                <p>Today I want to share with you an important announcement regarding the beta phase of our Discord bot. As many of you have already experienced, Closyer offers a comprehensive roleplay experience with features including virtual economy, family system, marriages, and business activities. However, as we are still in beta, we are continuing to implement significant improvements to the bot's infrastructure.</p>
+                
+                <div class="notice-box">
+                    <h3>What's happening?</h3>
+                    <p>During this beta phase, we may need to periodically reset the database, restoring all user data to its initial state. This means that all progression, acquired items, family relationships, and marriages will be lost, and all users will see their monetary balances return to the default value of <strong>1000 coins</strong>.</p>
+                </div>
+                
+                <h2>Why are resets necessary?</h2>
+                
+                <p>Database resets during the beta phase aren't random but represent a fundamental technical necessity for several reasons:</p>
+                
+                <ul>
+                    <li><strong>Structure optimization:</strong> We're continuously improving the database structure to ensure better performance and reduce the bot's response times.</li>
+                    <li><strong>Critical bug fixes:</strong> Sometimes, certain fixes require substantial changes to how data is stored, making complete migration of existing data impossible.</li>
+                    <li><strong>Economy balancing:</strong> Resets allow us to analyze how the virtual economy behaves and make adjustments to ensure a fair experience for everyone.</li>
+                    <li><strong>Testing new features:</strong> Introducing new features often requires modifying existing tables or creating new relationships between data, which may be incompatible with previous data.</li>
+                </ul>
+                
+                <h2>Reset frequency and notice</h2>
+                
+                <p>We understand how frustrating it can be to lose progress you've worked hard for, which is why we commit to:</p>
+                
+                <ul>
+                    <li>Limiting resets to strictly necessary situations</li>
+                    <li>Always providing at least 7 days' notice through announcements on the official Discord server</li>
+                    <li>Planning resets during lower traffic hours to minimize impact on the community</li>
+                    <li>Offering compensatory bonuses after each reset to help users recover more quickly</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <p><strong>Important:</strong> The next reset is scheduled for 05/15/2025. We invite you to join our <a href="https://discord.gg/Bv8M7WTgka">official Discord server</a> to receive timely updates and participate in discussions about these changes.</p>
+                </div>
+                
+                <h2>What we're doing to reduce the need for resets</h2>
+                
+                <p>Our team is working intensively on various solutions to minimize the need for database resets in the future:</p>
+                
+                <h3>Infrastructure improvements</h3>
+                
+                <p>We're developing a more resilient and flexible database system that will better support future improvements and expansions. This includes:</p>
+                
+                <ul>
+                    <li>Implementing a NoSQL database that's better suited for frequent structural changes</li>
+                    <li>Creating an incremental backup system that allows partial restorations without losing all data</li>
+                    <li>Developing automated migration tools to preserve data during updates</li>
+                </ul>
+                
+                <h3>Transition to stable version system</h3>
+                
+                <p>We're also planning a clear path to Closyer's stable version, which will include:</p>
+                
+                <ul>
+                    <li>An advanced beta phase with less frequent resets</li>
+                    <li>A final "grand launch" reset before the stable version</li>
+                    <li>Implementation of compensation systems for loyal beta users</li>
+                    <li>A formal commitment not to perform complete resets once the stable version is reached</li>
+                </ul>
+                
+                <h2>Your contribution is essential</h2>
+                
+                <p>As beta testers, your contribution is invaluable to Closyer's development. Your feedback, bug reports, and patience shown during these resets help us create a better experience for everyone. To thank you for your support, we're preparing some exclusive benefits for beta testers that will be announced soon.</p>
+                
+                <blockquote>
+                    "The beta phase isn't about perfection, but continuous improvement through feedback and development cycles. Thank you for being part of this journey with us." - Closyer Team
+                </blockquote>
+                
+                <h2>Frequently asked questions</h2>
+                
+                <h3>Can I do anything to save my progress?</h3>
+                <p>Unfortunately, during the beta phase, it's not possible to preserve data through resets. However, we're developing an "achievement" system that will recognize your milestones even after a reset.</p>
+                
+                <h3>Will there be compensation for resets?</h3>
+                <p>Yes, we're planning compensation bonuses for active users after each reset, which may include extra coins, exclusive items, or temporary advantages.</p>
+                
+                <h3>When will the beta phase end?</h3>
+                <p>Our goal is to complete the beta phase by the end of 2025, with a gradual transition to the stable version that will no longer require complete resets.</p>
+                
+                <p>Thank you for your understanding and continued support. We're excited to build the future of Closyer together with you!</p>
+                
+                <p>Best regards,<br>Devid<br>Closyer Developer</p>
+            </div>
+        </article>
+        
+        <div class="back-to-blog">
+            <a href="index.html" class="secondary-button">Back to Blog</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h3 class="footer-title">Closyer</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="../index.html" data-i18n="footer_home">Home</a></li>
+                    <li class="footer-link"><a href="../index.html#features" data-i18n="footer_features">Features</a></li>
+                    <li class="footer-link"><a href="../index.html#add" data-i18n="footer_add">Add Bot</a></li>
+                    <li class="footer-link"><a href="../index.html#server" data-i18n="footer_server">Discord Server</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title" data-i18n="footer_resources">Resources</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_support">Support</a></li>
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_docs">Documentation</a></li>
+                    <li class="footer-link"><a href="https://discord.gg/Bv8M7WTgka" data-i18n="footer_bugs">Report Bug</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title" data-i18n="footer_languages">Languages</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#" class="lang-btn" data-lang="it">Italiano</a></li>
+                    <li class="footer-link"><a href="#" class="lang-btn" data-lang="en">English</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p data-i18n="copyright">&copy; 2025 Closyer Bot. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
