@@ -93,11 +93,11 @@ const translations = {
         "feature_roleplay_desc": "A complete system for creating interactive roleplay stories and situations with other members.",
         "feature_language_title": "Language Support",
         "feature_language_desc": "Currently available in English and Italian. More languages coming soon.",
-        
-        // Add Bot Section
+          // Add Bot Section
         "add_section_title": "Bring Closyer to Your Server",
         "add_section_desc": "Transform your Discord server into a complete roleplay experience. Just a few clicks to add Closyer to your server and start creating your virtual world.",
         "add_section_button": "Add Closyer to Your Server",
+        "add_section_offline_warning": "⚠️ Warning: The bot is currently offline. Adding to server will not be functional until service is restored.",
         
         // Vote Section
         "vote_section_title": "Vote for Closyer",
