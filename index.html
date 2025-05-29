@@ -114,11 +114,10 @@
             <h2 class="section-title" data-i18n="vote_section_title">Vota Closyer</h2>
             <p style="text-align: center; margin-bottom: 40px; color: rgba(255, 255, 255, 0.8); font-size: 1.2rem;" data-i18n="vote_section_desc">Supporta Closyer votandolo sulle principali piattaforme di bot Discord e aiutaci a crescere!</p>
             <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
+                <div class="feature-card">                    <div class="feature-icon">🏆</div>
                     <h3 class="feature-title">Top.gg</h3>
-                    <p class="feature-description" data-i18n="vote_topgg_desc">Vota Closyer su Top.gg, una delle principali piattaforme di bot Discord.</p>
-                    <a href="https://top.gg/bot/1366105187214823424?s=06e7d618ed0bd" class="secondary-button" style="display: block; margin-top: 20px; text-align: center;" data-i18n="vote_topgg_button">Vota su Top.gg</a>
+                    <p class="feature-description" data-i18n="vote_topgg_desc">Presto disponibile su Top.gg, una delle principali piattaforme di bot Discord.</p>
+                    <a href="#" class="secondary-button disabled" style="display: block; margin-top: 20px; text-align: center;" data-i18n="vote_topgg_button">Coming Soon on Top.gg</a>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
@@ -179,17 +178,18 @@
         <div class="copyright">
             <p data-i18n="copyright">&copy; 2025 Closyer Bot. Tutti i diritti riservati.</p>
         </div>
-    </footer>
-
-    <style>
+    </footer>    <style>
         /* Offline Notice Banner Styles */
         .offline-notice {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            padding: 1.5rem 0;
+            box-shadow: 0 8px 30px rgba(140, 82, 255, 0.25);
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 80px; /* Aggiustato per la navbar fixed */
         }
 
         .offline-notice::before {
@@ -197,78 +197,100 @@
             position: absolute;
             top: 0;
             left: -100%;
-            width: 100%;
+            width: 200%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shine 3s infinite;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            animation: shine 4s ease-in-out infinite;
         }
 
         @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(50%); }
         }
 
         .notice-content {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 2rem;
             position: relative;
             z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .notice-icon {
             font-size: 2.5rem;
             flex-shrink: 0;
-            animation: pulse 2s infinite;
+            animation: noticePulse 2.5s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @keyframes noticePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .notice-text {
+            flex: 1;
         }
 
         .notice-text h3 {
-            margin: 0 0 8px 0;
+            margin: 0 0 0.75rem 0;
             font-size: 1.4rem;
-            font-weight: bold;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--light);
         }
 
         .notice-text p {
             margin: 0;
             font-size: 1rem;
-            opacity: 0.95;
-            line-height: 1.5;
+            opacity: 0.9;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* Disabled button styles */
         .add-button.disabled,
-        .big-button.disabled {
-            background: #666 !important;
+        .big-button.disabled,
+        .secondary-button.disabled {
+            background: rgba(102, 102, 102, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
             cursor: not-allowed !important;
-            opacity: 0.6;
+            opacity: 0.7;
             pointer-events: none;
-        }
-
-        .add-button.disabled:hover,
-        .big-button.disabled:hover {
-            background: #666 !important;
             transform: none !important;
-        }
-
-        /* Offline warning in add section */
+            box-shadow: none !important;
+        }        /* Offline warning in add section */
         .offline-warning {
-            background: rgba(255, 107, 107, 0.1);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px 0;
+            background: rgba(140, 82, 255, 0.1);
+            border: 1px solid rgba(140, 82, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px auto;
+            width: 100%;
+            max-width: 800px;
             text-align: center;
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .offline-warning p {
             margin: 0;
-            color: #ff6b6b;
+            color: var(--primary);
             font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.5;
+            text-align: center;
+            width: 100%;
         }
 
         /* Mobile responsiveness */
@@ -276,19 +298,27 @@
             .notice-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 15px;
+                gap: 1rem;
+                padding: 1rem;
             }
 
             .notice-icon {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .notice-text h3 {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
             }
 
             .notice-text p {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
+                padding: 0 1rem;
+            }
+
+            .offline-warning {
+                margin: 20px;
+                padding: 15px;
             }
         }
     </style>
